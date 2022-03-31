@@ -1,0 +1,13 @@
+#escape=`
+
+# Base image with Windows and Microsoft Build Tools
+FROM buildtoolsmsvc
+
+# Uses CMD Shell to download Chocolatey(Package Manager)
+RUN @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command " [System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+
+# Uses Chocolatey to download cmake and change env variables
+RUN choco install cmake.install --version=3.13.1 --installargs 'ADD_CMAKE_TO_PATH=System' -y
+
+# checking if cmake command is recognized
+RUN cmake
